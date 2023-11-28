@@ -102,6 +102,8 @@ bcl_pmic5.ko
 nvme-core.ko
 nvme.ko
 mi_memory.ko
+extend_reclaim.ko
+perf_helper.ko
 mi_schedule.ko
 metis.ko
 zram.ko
@@ -109,6 +111,7 @@ zsmalloc.ko
 mi_power.ko
 dump_display.ko
 low_free_memory_kill.ko
+mist.ko
 locktorture.ko
 rcutorture.ko
 msm_sysstats.ko
@@ -189,7 +192,6 @@ xlogchar.ko
 qcom_iommu_debug.ko
 lt9611uxc.ko
 lkdtm.ko
-perf_helper.ko
 qseecom_proxy.ko
 sg.ko
 spidev.ko

@@ -78,7 +78,6 @@ xlogchar.ko
 qcom_iommu_debug.ko
 lt9611uxc.ko
 lkdtm.ko
-perf_helper.ko
 qseecom_proxy.ko
 sg.ko
 spidev.ko
