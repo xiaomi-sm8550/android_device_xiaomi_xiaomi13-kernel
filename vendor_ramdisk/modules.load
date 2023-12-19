@@ -101,6 +101,8 @@ bcl_pmic5.ko
 nvme-core.ko
 nvme.ko
 mi_memory.ko
+extend_reclaim.ko
+perf_helper.ko
 mi_schedule.ko
 metis.ko
 zram.ko
@@ -108,6 +110,7 @@ zsmalloc.ko
 mi_power.ko
 dump_display.ko
 low_free_memory_kill.ko
+mist.ko
 qrng_dlkm.ko
 bootinfo.ko
 debug_ext.ko
