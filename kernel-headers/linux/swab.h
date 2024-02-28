@@ -1,3 +1,6 @@
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
+
 /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
 #ifndef _LINUX_SWAB_H
 #define _LINUX_SWAB_H
@@ -303,3 +306,4 @@ static __inline__ void __swahb32s(__u32 *p)
 
 
 #endif /* _LINUX_SWAB_H */
+#pragma GCC diagnostic pop

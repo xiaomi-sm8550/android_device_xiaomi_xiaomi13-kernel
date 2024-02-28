@@ -1,3 +1,6 @@
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
+
 /* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
 #ifndef _LINUX_BYTEORDER_LITTLE_ENDIAN_H
 #define _LINUX_BYTEORDER_LITTLE_ENDIAN_H
@@ -105,3 +108,4 @@ static __always_inline __u16 __be16_to_cpup(const __be16 *p)
 
 
 #endif /* _LINUX_BYTEORDER_LITTLE_ENDIAN_H */
+#pragma GCC diagnostic pop
