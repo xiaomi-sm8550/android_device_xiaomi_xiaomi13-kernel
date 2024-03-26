@@ -14,6 +14,12 @@ SRC_ROOT="${MY_DIR}/../../.."
 TMP_DIR=$(mktemp -d)
 EXTRACT_KERNEL=true
 declare -a MODULE_FOLDERS=("vendor_ramdisk" "vendor_dlkm" "system_dlkm")
+declare -a DTBO_PANEL_PATCHES=(
+    "fuxi:dsi_m3_38_0c_0a_dsc_cmd"
+    "fuxi:dsi_m3gl_38_0c_0a_dsc_cmd"
+    "nuwa:dsi_m2_38_0c_0a_dsc_cmd"
+    "nuwa:dsi_m2a_42_02_0b_dsc_cmd"
+)
 
 while [ "${#}" -gt 0 ]; do
     case "${1}" in
@@ -69,8 +75,26 @@ find "${TMP_DIR}/dtbs" -type f -name "*.dtb" \
     -exec cp {} "${MY_DIR}/dtbs" \; \
     -exec printf "  - dtbs/" \; \
     -exec basename {} \;
-cp -f "${DUMP}/dtbo.img" "${MY_DIR}/dtbs/dtbo.img"
-echo "  - dtbs/dtbo.img"
+
+python3 "${TMP_DIR}/extract_dtb.py" "${DUMP}/dtbo.img" -o "${TMP_DIR}/dtbo" > /dev/null
+for DTBO_PANEL_PATCH in "${DTBO_PANEL_PATCHES[@]}"; do
+    DTBO_PANEL_PATCH=(${DTBO_PANEL_PATCH//:/ })
+    device=${DTBO_PANEL_PATCH[0]}
+    panel=${DTBO_PANEL_PATCH[1]}
+    find "${TMP_DIR}/dtbo" -type f -name "*${device}*.dtb" -exec grep -q "${panel}" {} \; \
+        -exec bash -c '
+            dt_node="$(fdtget -t s "{}" /__symbols__ "'${panel}'")";
+            panel_height="$(fdtget -t i "{}" $dt_node "qcom,mdss-pan-physical-height-dimension")";
+            panel_width="$(fdtget -t i "{}" $dt_node "qcom,mdss-pan-physical-width-dimension")";
+            fdtput -t li "{}" "$dt_node" qcom,mdss-pan-physical-height-dimension "$((panel_height / 10))";
+            fdtput -t li "{}" "$dt_node" qcom,mdss-pan-physical-width-dimension "$((panel_width / 10))";
+        ' \; \
+        -exec printf "    + Fixed up panel dimensions of ${panel} in dtbo/" \; \
+        -exec basename {} \;
+done
+${SRC_ROOT}/system/libufdt/utils/src/mkdtboimg.py \
+    create "${MY_DIR}/dtbs/dtbo.img" --page_size=4096 "${TMP_DIR}/dtbo/"*.dtb
+echo "    + Generated dtbs/dtbo.img"
 
 ### Modules
 # Cleanup / Preparation
